@@ -1,0 +1,10 @@
+# Ghost Horror Mode Dependencies
+
+# Core display engine
+pygame>=2.5.0
+
+# X11 keyboard grab (optional, for keyboard suppression)
+python-xlib>=0.33
+
+# Note: python-xlib is optional but recommended
+# Without it, keyboard shortcuts won't be suppressed during the sequence
