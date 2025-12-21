@@ -4,7 +4,8 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# Check for virtual environment
+# Add cargo bin to PATH (for ekphos)
+export PATH="$HOME/.cargo/bin:$PATH"
 if [ ! -d "venv" ]; then
     echo "Setting up virtual environment..."
     python3 -m venv venv

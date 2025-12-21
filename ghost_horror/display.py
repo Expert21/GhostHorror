@@ -32,6 +32,9 @@ class Display:
         pygame.display.set_caption("Ghost Horror")
         pygame.mouse.set_visible(False)
         
+        # IMPORTANT: Grab input focus so keyboard works without mouse position
+        pygame.event.set_grab(True)
+        
         self.background_color = background_color
         self.clock = pygame.time.Clock()
         self.running = True
@@ -114,6 +117,7 @@ class Display:
     
     def close(self):
         """Close the display"""
+        pygame.event.set_grab(False)  # Release input grab
         pygame.mouse.set_visible(True)
         pygame.quit()
 

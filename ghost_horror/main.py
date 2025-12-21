@@ -69,8 +69,12 @@ def run_exit_sequence(display: Display) -> bool:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 display.running = False
-            else:
-                result = text_input.handle_event(event)
+            elif event.type == pygame.KEYDOWN:
+                # ESC key = emergency exit
+                if event.key == pygame.K_ESCAPE:
+                    return True
+                else:
+                    result = text_input.handle_event(event)
         
         display.update()
     
@@ -84,9 +88,9 @@ def run_exit_sequence(display: Display) -> bool:
         message.show(duration_ms=2500, fade_in_ms=800, fade_out_ms=800)
         return True
     else:
-        # User said no or something else - return to darkness
-        message = MessageDisplay(display, "Return to the darkness!", BLOOD_RED, font_scale=0.10)
-        message.show(duration_ms=1500, fade_in_ms=500, fade_out_ms=500)
+        # User said no or something else - back to Ekphos
+        message = MessageDisplay(display, "Then Return!", BLOOD_RED, font_scale=0.10)
+        message.show(duration_ms=1200, fade_in_ms=400, fade_out_ms=400)
         return False
 
 
@@ -124,16 +128,13 @@ def main():
     sound = SoundManager()
     
     try:
-        # Grab keyboard
+        # Grab keyboard for intro
         input_manager.grab_keyboard()
         
+        # Run intro sequence once at start
+        run_intro_sequence(display)
+        
         while display.running:
-            # Run intro sequence
-            run_intro_sequence(display)
-            
-            if not display.running:
-                break
-            
             # Release keyboard for Ekphos
             input_manager.release_keyboard()
             
@@ -152,17 +153,17 @@ def main():
             
             # Re-initialize display for exit sequence
             display = Display()
-            input_manager.grab_keyboard()
+            # NOTE: Don't grab keyboard here - we need typing for the prompt!
             
-            # Run exit sequence
+            # Run exit sequence (keyboard NOT grabbed so user can type)
             should_exit = run_exit_sequence(display)
             
             if should_exit:
                 # User wants to leave
                 break
             else:
-                # User wants to stay in darkness - loop back to intro
-                print("Returning to the darkness...")
+                # User said no - "Then Return!" was shown, loop back to Ekphos
+                print("Returning to Ekphos...")
                 # Reset launcher for next iteration
                 launcher = EkphosLauncher()
                 launcher.check_requirements()
