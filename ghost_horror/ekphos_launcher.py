@@ -9,24 +9,25 @@ import shutil
 from typing import Optional, List
 
 
-def find_terminal() -> Optional[str]:
+def find_terminal() -> Optional[List[str]]:
     """
     Find an available terminal emulator
-    Returns the terminal command or None if not found
+    Returns the terminal command with fullscreen flags, or None if not found
     """
-    # Terminals in order of preference (modern -> common)
+    # Terminals in order of preference with fullscreen flags
+    # Format: (binary_name, [command, fullscreen_flags..., exec_flag])
     terminals = [
-        ("kitty", ["kitty"]),
-        ("alacritty", ["alacritty"]),
-        ("foot", ["foot"]),
-        ("wezterm", ["wezterm", "start"]),
-        ("ghostty", ["ghostty"]),
-        ("konsole", ["konsole"]),
-        ("gnome-terminal", ["gnome-terminal", "--"]),
-        ("xfce4-terminal", ["xfce4-terminal", "-x"]),
-        ("xterm", ["xterm", "-e"]),
-        ("urxvt", ["urxvt", "-e"]),
-        ("st", ["st", "-e"]),
+        ("kitty", ["kitty", "--start-as=fullscreen"]),
+        ("alacritty", ["alacritty", "--option", "window.startup_mode=Fullscreen", "-e"]),
+        ("foot", ["foot", "--fullscreen"]),
+        ("wezterm", ["wezterm", "start", "--maximized"]),  # wezterm doesn't have true fullscreen flag
+        ("ghostty", ["ghostty", "--fullscreen"]),
+        ("konsole", ["konsole", "--fullscreen", "-e"]),
+        ("gnome-terminal", ["gnome-terminal", "--full-screen", "--"]),
+        ("xfce4-terminal", ["xfce4-terminal", "--fullscreen", "-x"]),
+        ("xterm", ["xterm", "-fullscreen", "-e"]),
+        ("urxvt", ["urxvt", "-e"]),  # urxvt doesn't have fullscreen flag
+        ("st", ["st", "-e"]),  # st doesn't have fullscreen flag
     ]
     
     for name, cmd in terminals:
